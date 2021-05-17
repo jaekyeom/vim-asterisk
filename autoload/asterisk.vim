@@ -34,6 +34,7 @@ let s:INT = { 'MAX': 2147483647 }
 let s:DIRECTION = { 'forward': 1, 'backward': 0 } " see :h v:searchforward
 
 let g:asterisk#keeppos = get(g:, 'asterisk#keeppos', s:FALSE)
+let g:asterisk#no_is_whole_in_visual_mode = get(g:, 'asterisk#no_is_whole_in_visual_mode', s:FALSE)
 
 " do_jump: do not move cursor if false
 " is_whole: is_whole word. false if `g` flag given (e.g. * -> true, g* -> false)
@@ -151,7 +152,7 @@ function! s:convert_2_word_pattern_4_visual(pattern, config) abort
     let text = a:pattern
     let type = (a:config.direction is# s:DIRECTION.forward ? '/' : '?')
     let [pre, post] = ['', '']
-    if a:config.is_whole
+    if a:config.is_whole && !g:asterisk#no_is_whole_in_visual_mode
         let [head_pos, tail_pos] = s:sort_pos([s:getcoord('.'), s:getcoord('v')])
         let head = matchstr(text, '^.')
         let is_head_multibyte = 1 < len(head)
